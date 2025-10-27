@@ -44,3 +44,6 @@ demos/src/Dev/**
 # instructions
 .github/instructions/*
 !.github/instructions/tiptap.instructions.md
+
+# Claude Code settings
+.claude/

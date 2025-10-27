@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vanilla JS - 기본 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>Vanilla JavaScript - 기본 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>기본 에디터</h2>
+        </div>
+        <div class="card-body">
+          <p>가장 기본적인 Tiptap 에디터 구현입니다. 최소한의 설정으로 에디터를 생성합니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="editor"></div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>코드 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>// Tiptap 에디터 생성
+const { Editor } = window.tiptap
+const StarterKit = window.tiptapStarterKit.StarterKit
+
+const editor = new Editor({
+  element: document.getElementById('editor'),
+  extensions: [StarterKit],
+  content: '&lt;p&gt;안녕하세요!&lt;/p&gt;'
+})
+
+// 콘텐츠 가져오기
+const html = editor.getHTML()
+console.log(html)
+
+// 콘텐츠 설정
+editor.commands.setContent('&lt;p&gt;새로운 내용&lt;/p&gt;')
+
+// 에디터 포커스
+editor.commands.focus()
+
+// 에디터 파괴
+editor.destroy()</code></pre>
+        </div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>주요 메서드</h3>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <button class="btn btn-primary" onclick="getContent()">콘텐츠 가져오기</button>
+            <button class="btn btn-secondary" onclick="setContent()">콘텐츠 설정</button>
+            <button class="btn btn-secondary" onclick="focusEditor()">포커스</button>
+            <button class="btn btn-secondary" onclick="toggleEditable()">편집 모드 전환</button>
+            <button class="btn btn-ghost" onclick="clearEditor()">내용 지우기</button>
+          </div>
+          <div id="output" style="padding: 1rem; background: var(--cf-gray-1); border-radius: var(--cf-radius-md); font-family: var(--cf-font-family-mono); font-size: 0.875rem; white-space: pre-wrap; word-break: break-all;"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    const editor = new Editor({
+      element: document.getElementById('editor'),
+      extensions: [StarterKit],
+      content: `
+        <h2>Vanilla JavaScript로 만든 기본 에디터</h2>
+        <p>이것은 <strong>Tiptap</strong>을 사용한 가장 기본적인 예제입니다.</p>
+        <ul>
+          <li>텍스트 포맷팅 (굵게, 기울임, 취소선)</li>
+          <li>제목 (H1, H2, H3)</li>
+          <li>목록 (순서 있는 목록, 글머리 기호)</li>
+          <li>코드 블록과 인라인 코드</li>
+        </ul>
+        <p>키보드 단축키를 사용해보세요:</p>
+        <ul>
+          <li><code>Ctrl+B</code> - 굵게</li>
+          <li><code>Ctrl+I</code> - 기울임</li>
+          <li><code>Ctrl+Z</code> - 실행 취소</li>
+        </ul>
+      `,
+      editorProps: {
+        attributes: {
+          class: 'tiptap-editor'
+        }
+      }
+    })
+
+    // Expose functions to window for button clicks
+    window.getContent = function() {
+      const html = editor.getHTML()
+      document.getElementById('output').textContent = html
+    }
+
+    window.setContent = function() {
+      const newContent = prompt('새로운 콘텐츠를 입력하세요:', '<p>새로운 내용</p>')
+      if (newContent) {
+        editor.commands.setContent(newContent)
+      }
+    }
+
+    window.focusEditor = function() {
+      editor.commands.focus()
+    }
+
+    window.toggleEditable = function() {
+      editor.setEditable(!editor.isEditable)
+      alert(`편집 모드: ${editor.isEditable ? '활성화' : '비활성화'}`)
+    }
+
+    window.clearEditor = function() {
+      if (confirm('모든 내용을 지우시겠습니까?')) {
+        editor.commands.clearContent()
+      }
+    }
+  </script>
+</body>
+</html>

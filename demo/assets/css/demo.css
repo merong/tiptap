@@ -1,0 +1,429 @@
+/**
+ * Demo-specific Styles
+ * Editor, toolbar, and interactive component styles
+ */
+
+/* ========================================
+   Toolbar
+   ======================================== */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cf-space-xs);
+  padding: var(--cf-space-md);
+  background-color: var(--cf-gray-1);
+  border-bottom: 1px solid var(--cf-gray-2);
+}
+
+.toolbar-group {
+  display: flex;
+  gap: var(--cf-space-xs);
+  padding: 0 var(--cf-space-sm);
+  border-right: 1px solid var(--cf-gray-3);
+}
+
+.toolbar-group:last-child {
+  border-right: none;
+}
+
+.toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--cf-radius-sm);
+  color: var(--cf-gray-7);
+  cursor: pointer;
+  transition: all var(--cf-transition-fast);
+}
+
+.toolbar-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.toolbar-button:hover {
+  background-color: var(--cf-gray-2);
+  color: var(--cf-gray-8);
+}
+
+.toolbar-button.is-active {
+  background-color: var(--cf-orange);
+  color: var(--cf-gray-0);
+}
+
+.toolbar-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: var(--cf-gray-3);
+  margin: 0 var(--cf-space-xs);
+}
+
+/* ========================================
+   Editor
+   ======================================== */
+
+.editor-wrapper {
+  min-height: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.tiptap-editor {
+  padding: var(--cf-space-lg);
+  min-height: 400px;
+  outline: none;
+  font-size: var(--cf-font-size-base);
+  line-height: var(--cf-line-height-relaxed);
+  color: var(--cf-gray-8);
+}
+
+.tiptap-editor > * + * {
+  margin-top: 0.75em;
+}
+
+/* Headings */
+.tiptap-editor h1 {
+  font-size: var(--cf-font-size-4xl);
+  font-weight: var(--cf-font-weight-bold);
+  line-height: var(--cf-line-height-tight);
+  color: var(--cf-gray-9);
+}
+
+.tiptap-editor h2 {
+  font-size: var(--cf-font-size-3xl);
+  font-weight: var(--cf-font-weight-bold);
+  line-height: var(--cf-line-height-tight);
+  color: var(--cf-gray-9);
+}
+
+.tiptap-editor h3 {
+  font-size: var(--cf-font-size-2xl);
+  font-weight: var(--cf-font-weight-semibold);
+  line-height: var(--cf-line-height-tight);
+  color: var(--cf-gray-9);
+}
+
+.tiptap-editor h4 {
+  font-size: var(--cf-font-size-xl);
+  font-weight: var(--cf-font-weight-semibold);
+  line-height: var(--cf-line-height-tight);
+  color: var(--cf-gray-9);
+}
+
+/* Paragraph */
+.tiptap-editor p {
+  margin: 0;
+}
+
+/* Lists */
+.tiptap-editor ul,
+.tiptap-editor ol {
+  padding-left: var(--cf-space-xl);
+}
+
+.tiptap-editor li {
+  margin-top: var(--cf-space-xs);
+}
+
+.tiptap-editor li p {
+  margin: 0;
+}
+
+/* Code */
+.tiptap-editor code {
+  padding: 2px 6px;
+  background-color: var(--cf-gray-2);
+  border-radius: var(--cf-radius-sm);
+  font-family: var(--cf-font-family-mono);
+  font-size: 0.9em;
+  color: var(--cf-error);
+}
+
+.tiptap-editor pre {
+  background-color: var(--cf-gray-8);
+  color: var(--cf-gray-0);
+  padding: var(--cf-space-md);
+  border-radius: var(--cf-radius-md);
+  overflow-x: auto;
+}
+
+.tiptap-editor pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: var(--cf-font-size-sm);
+}
+
+/* Blockquote */
+.tiptap-editor blockquote {
+  border-left: 3px solid var(--cf-orange);
+  padding-left: var(--cf-space-md);
+  margin-left: 0;
+  font-style: italic;
+  color: var(--cf-gray-6);
+}
+
+/* Horizontal Rule */
+.tiptap-editor hr {
+  border: none;
+  border-top: 2px solid var(--cf-gray-3);
+  margin: var(--cf-space-xl) 0;
+}
+
+/* Link */
+.tiptap-editor a {
+  color: var(--cf-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-editor a:hover {
+  color: var(--cf-blue-dark);
+}
+
+/* Image */
+.tiptap-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--cf-radius-md);
+}
+
+/* Mark styles */
+.tiptap-editor strong {
+  font-weight: var(--cf-font-weight-bold);
+}
+
+.tiptap-editor em {
+  font-style: italic;
+}
+
+.tiptap-editor s {
+  text-decoration: line-through;
+}
+
+.tiptap-editor u {
+  text-decoration: underline;
+}
+
+.tiptap-editor mark {
+  background-color: #FFF59D;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* Placeholder */
+.tiptap-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--cf-gray-5);
+  pointer-events: none;
+  height: 0;
+}
+
+/* Selection */
+.tiptap-editor ::selection {
+  background-color: rgba(244, 129, 32, 0.2);
+}
+
+/* ========================================
+   Editor Controls
+   ======================================== */
+
+.editor-controls {
+  display: flex;
+  gap: var(--cf-space-sm);
+  padding: var(--cf-space-md);
+  background-color: var(--cf-gray-1);
+  border-top: 1px solid var(--cf-gray-2);
+}
+
+/* ========================================
+   Config Panel
+   ======================================== */
+
+.config-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cf-space-md);
+}
+
+.config-group {
+  padding-bottom: var(--cf-space-md);
+  border-bottom: 1px solid var(--cf-gray-2);
+}
+
+.config-group:last-child {
+  border-bottom: none;
+}
+
+.config-group h4 {
+  font-size: var(--cf-font-size-sm);
+  font-weight: var(--cf-font-weight-semibold);
+  color: var(--cf-gray-7);
+  margin-bottom: var(--cf-space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.config-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--cf-space-xs) 0;
+  font-size: var(--cf-font-size-sm);
+}
+
+.config-label {
+  color: var(--cf-gray-7);
+  font-weight: var(--cf-font-weight-medium);
+}
+
+.config-value {
+  color: var(--cf-gray-8);
+  font-family: var(--cf-font-family-mono);
+  font-size: var(--cf-font-size-xs);
+  background-color: var(--cf-gray-2);
+  padding: 2px 6px;
+  border-radius: var(--cf-radius-sm);
+}
+
+.config-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--cf-space-sm);
+  margin-top: var(--cf-space-sm);
+}
+
+.stat-item {
+  text-align: center;
+  padding: var(--cf-space-sm);
+  background-color: var(--cf-gray-1);
+  border-radius: var(--cf-radius-md);
+}
+
+.stat-value {
+  display: block;
+  font-size: var(--cf-font-size-2xl);
+  font-weight: var(--cf-font-weight-bold);
+  color: var(--cf-orange);
+}
+
+.stat-label {
+  display: block;
+  font-size: var(--cf-font-size-xs);
+  color: var(--cf-gray-6);
+  margin-top: var(--cf-space-xs);
+}
+
+/* ========================================
+   Storage Modal
+   ======================================== */
+
+.saved-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--cf-space-md);
+  background-color: var(--cf-gray-1);
+  border-radius: var(--cf-radius-md);
+  margin-bottom: var(--cf-space-sm);
+  transition: all var(--cf-transition-base);
+}
+
+.saved-item:hover {
+  background-color: var(--cf-gray-2);
+}
+
+.saved-item-info h4 {
+  font-size: var(--cf-font-size-base);
+  font-weight: var(--cf-font-weight-medium);
+  color: var(--cf-gray-8);
+  margin-bottom: var(--cf-space-xs);
+}
+
+.saved-item-meta {
+  font-size: var(--cf-font-size-xs);
+  color: var(--cf-gray-6);
+}
+
+.saved-item-actions {
+  display: flex;
+  gap: var(--cf-space-xs);
+}
+
+/* ========================================
+   Theme Support
+   ======================================== */
+
+.theme-dark {
+  --cf-gray-0: #1E1E27;
+  --cf-gray-1: #3A3B49;
+  --cf-gray-2: #5E5F6E;
+  --cf-gray-3: #8B8FA3;
+  --cf-gray-4: #B3B6BD;
+  --cf-gray-5: #D5D7DD;
+  --cf-gray-6: #E8E8EA;
+  --cf-gray-7: #F6F6F8;
+  --cf-gray-8: #FFFFFF;
+  --cf-gray-9: #FFFFFF;
+}
+
+.theme-dark .tiptap-editor code {
+  background-color: var(--cf-gray-7);
+}
+
+.theme-dark .tiptap-editor pre {
+  background-color: var(--cf-gray-9);
+  color: var(--cf-gray-1);
+}
+
+/* ========================================
+   Loading State
+   ======================================== */
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--cf-gray-3);
+  border-top-color: var(--cf-orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--cf-transition-base);
+}

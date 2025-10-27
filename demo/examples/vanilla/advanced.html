@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vanilla JS - 고급 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>Vanilla JavaScript - 고급 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>고급 기능</h2>
+        </div>
+        <div class="card-body">
+          <p>이벤트 핸들링, 커스텀 명령어, 상태 관리 등 고급 기능을 보여주는 예제입니다.</p>
+        </div>
+      </div>
+
+      <div class="demo-layout">
+        <div class="editor-section">
+          <div class="toolbar" id="toolbar"></div>
+          <div id="editor" class="editor-wrapper"></div>
+        </div>
+
+        <aside class="config-panel">
+          <h3>실시간 통계</h3>
+          <div class="config-stats">
+            <div class="stat-item">
+              <span class="stat-value" id="word-count">0</span>
+              <span class="stat-label">단어</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="char-count">0</span>
+              <span class="stat-label">문자</span>
+            </div>
+          </div>
+
+          <div class="config-group mt-lg">
+            <h4>이벤트 로그</h4>
+            <div id="event-log" style="max-height: 200px; overflow-y: auto; font-size: 0.75rem; font-family: var(--cf-font-family-mono);"></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>커스텀 명령어</h3>
+        </div>
+        <div class="card-body">
+          <p>사용자 정의 명령어를 실행해보세요:</p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="insertDate()">현재 날짜 삽입</button>
+            <button class="btn btn-secondary btn-sm" onclick="insertTemplate()">템플릿 삽입</button>
+            <button class="btn btn-secondary btn-sm" onclick="selectAll()">전체 선택</button>
+            <button class="btn btn-secondary btn-sm" onclick="getSelection()">선택 영역 정보</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>코드 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>// 이벤트 리스너 등록
+editor.on('update', ({ editor }) => {
+  console.log('Content updated')
+})
+
+editor.on('selectionUpdate', ({ editor }) => {
+  console.log('Selection changed')
+})
+
+editor.on('focus', ({ editor }) => {
+  console.log('Editor focused')
+})
+
+// 커스텀 명령어 실행
+editor.commands.insertContent('&lt;p&gt;새 문단&lt;/p&gt;')
+
+// 체이닝 명령어
+editor
+  .chain()
+  .focus()
+  .toggleBold()
+  .insertContent('Bold text')
+  .run()
+
+// 상태 확인
+const canUndo = editor.can().undo()
+const isActive = editor.isActive('bold')</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script src="../../assets/js/icons.js"></script>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    const editor = new Editor({
+      element: document.getElementById('editor'),
+      extensions: [StarterKit],
+      content: '<h2>고급 기능 예제</h2><p>이 에디터는 다양한 이벤트와 커스텀 명령어를 지원합니다.</p>',
+      editorProps: {
+        attributes: {
+          class: 'tiptap-editor'
+        }
+      }
+    })
+
+    // 툴바 생성
+    const toolbar = document.getElementById('toolbar')
+    const buttons = [
+      { icon: 'bold', action: () => editor.chain().focus().toggleBold().run(), active: 'bold' },
+      { icon: 'italic', action: () => editor.chain().focus().toggleItalic().run(), active: 'italic' },
+      { icon: 'heading1', action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(), active: 'heading' },
+      { icon: 'heading2', action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), active: 'heading' },
+      { icon: 'bulletList', action: () => editor.chain().focus().toggleBulletList().run(), active: 'bulletList' },
+      { icon: 'orderedList', action: () => editor.chain().focus().toggleOrderedList().run(), active: 'orderedList' }
+    ]
+
+    buttons.forEach(btn => {
+      const button = document.createElement('button')
+      button.className = 'toolbar-button'
+      button.innerHTML = window.ToolbarIcons[btn.icon] || btn.icon
+      button.onclick = btn.action
+      toolbar.appendChild(button)
+    })
+
+    // 이벤트 로그
+    const eventLog = document.getElementById('event-log')
+    function logEvent(event) {
+      const time = new Date().toLocaleTimeString('ko-KR')
+      const entry = document.createElement('div')
+      entry.textContent = `[${time}] ${event}`
+      eventLog.insertBefore(entry, eventLog.firstChild)
+
+      // 최대 20개 항목만 유지
+      while (eventLog.children.length > 20) {
+        eventLog.removeChild(eventLog.lastChild)
+      }
+    }
+
+    // 이벤트 리스너
+    editor.on('update', () => {
+      logEvent('update: 콘텐츠 변경됨')
+      updateStats()
+    })
+
+    editor.on('selectionUpdate', () => {
+      logEvent('selectionUpdate: 선택 영역 변경됨')
+    })
+
+    editor.on('focus', () => {
+      logEvent('focus: 에디터 포커스')
+    })
+
+    editor.on('blur', () => {
+      logEvent('blur: 에디터 포커스 해제')
+    })
+
+    editor.on('transaction', ({ transaction }) => {
+      if (transaction.docChanged) {
+        logEvent('transaction: 문서 변경 트랜잭션')
+      }
+    })
+
+    // 통계 업데이트
+    function updateStats() {
+      const text = editor.getText()
+      const words = text.trim().split(/\s+/).filter(w => w).length
+      const chars = text.length
+
+      document.getElementById('word-count').textContent = words
+      document.getElementById('char-count').textContent = chars
+    }
+
+    // 커스텀 명령어 - Expose to window
+    window.insertDate = function() {
+      const date = new Date().toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+      editor.chain().focus().insertContent(date).run()
+    }
+
+    window.insertTemplate = function() {
+      const template = `
+        <h3>제목</h3>
+        <p>여기에 내용을 작성하세요.</p>
+        <ul>
+          <li>항목 1</li>
+          <li>항목 2</li>
+          <li>항목 3</li>
+        </ul>
+      `
+      editor.chain().focus().insertContent(template).run()
+    }
+
+    window.selectAll = function() {
+      editor.commands.selectAll()
+      logEvent('selectAll: 전체 선택됨')
+    }
+
+    window.getSelection = function() {
+      const { from, to } = editor.state.selection
+      const text = editor.state.doc.textBetween(from, to, ' ')
+      alert(`선택된 텍스트: "${text}"\n범위: ${from} - ${to}`)
+    }
+
+    // 초기 통계
+    updateStats()
+  </script>
+</body>
+</html>

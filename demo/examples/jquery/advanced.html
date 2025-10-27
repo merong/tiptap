@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery - 고급 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>jQuery - 고급 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>jQuery 이벤트 통합</h2>
+        </div>
+        <div class="card-body">
+          <p>jQuery의 이벤트 시스템과 Tiptap을 통합한 고급 예제입니다.</p>
+        </div>
+      </div>
+
+      <div class="card mb-lg">
+        <div id="editor"></div>
+      </div>
+
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h3>실시간 이벤트 모니터</h3>
+        </div>
+        <div class="card-body">
+          <div id="events" style="max-height: 200px; overflow-y: auto; font-family: var(--cf-font-family-mono); font-size: 0.75rem;"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>jQuery 이벤트 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>// 커스텀 이벤트 리스너
+$('#editor')
+  .on('tiptap:initialized', function(e, instance) {
+    console.log('Editor initialized')
+  })
+  .on('tiptap:update', function(e, editor) {
+    console.log('Content updated')
+  })
+  .on('tiptap:saved', function(e, item) {
+    console.log('Content saved:', item)
+  })
+  .on('tiptap:loaded', function(e, item) {
+    console.log('Content loaded:', item)
+  })
+
+// jQuery 애니메이션과 함께 사용
+$('#editor')
+  .fadeOut()
+  .setEditorContent('&lt;p&gt;New content&lt;/p&gt;')
+  .fadeIn()</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    (function($) {
+      $.fn.advancedTiptap = function(options) {
+        return this.each(function() {
+          const $element = $(this)
+
+          const editor = new Editor({
+            element: this,
+            extensions: [StarterKit],
+            content: options.content || '<p></p>',
+            editorProps: {
+              attributes: {
+                class: 'tiptap-editor'
+              }
+            },
+            onCreate: ({ editor }) => {
+              $element.trigger('tiptap:created', [editor])
+            },
+            onUpdate: ({ editor }) => {
+              $element.trigger('tiptap:update', [editor])
+            },
+            onSelectionUpdate: ({ editor }) => {
+              $element.trigger('tiptap:selection', [editor])
+            },
+            onTransaction: ({ editor, transaction }) => {
+              $element.trigger('tiptap:transaction', [editor, transaction])
+            },
+            onFocus: ({ editor }) => {
+              $element.trigger('tiptap:focus', [editor])
+            },
+            onBlur: ({ editor }) => {
+              $element.trigger('tiptap:blur', [editor])
+            },
+            onDestroy: () => {
+              $element.trigger('tiptap:destroyed')
+            }
+          })
+
+          $element.data('editor', editor)
+        })
+      }
+    })(jQuery)
+
+    $(function() {
+      const $events = $('#events')
+
+      function logEvent(eventName, data) {
+        const time = new Date().toLocaleTimeString('ko-KR')
+        const $entry = $('<div>')
+          .text(`[${time}] ${eventName}`)
+          .css({ padding: '4px', borderBottom: '1px solid var(--cf-gray-2)' })
+
+        $events.prepend($entry)
+
+        // 최대 30개 항목만 유지
+        $events.children().slice(30).remove()
+      }
+
+      $('#editor')
+        .advancedTiptap({
+          content: `
+            <h2>jQuery 이벤트 통합</h2>
+            <p>이 에디터는 다양한 jQuery 커스텀 이벤트를 발생시킵니다.</p>
+            <p>에디터를 사용하면서 오른쪽 패널에서 실시간으로 이벤트를 확인하세요:</p>
+            <ul>
+              <li>텍스트 입력</li>
+              <li>선택 영역 변경</li>
+              <li>포커스 변경</li>
+              <li>트랜잭션 발생</li>
+            </ul>
+          `
+        })
+        .on('tiptap:created', function(e, editor) {
+          logEvent('created', editor)
+        })
+        .on('tiptap:update', function(e, editor) {
+          logEvent('update')
+        })
+        .on('tiptap:selection', function(e, editor) {
+          logEvent('selection')
+        })
+        .on('tiptap:transaction', function(e, editor, transaction) {
+          if (transaction.docChanged) {
+            logEvent('transaction (doc changed)')
+          }
+        })
+        .on('tiptap:focus', function() {
+          logEvent('focus')
+        })
+        .on('tiptap:blur', function() {
+          logEvent('blur')
+        })
+    })
+  </script>
+</body>
+</html>

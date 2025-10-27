@@ -1,0 +1,246 @@
+/**
+ * Main Styles
+ * Layout and structure for the demo application
+ */
+
+/* ========================================
+   Layout
+   ======================================== */
+
+.demo-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-header {
+  background-color: var(--cf-gray-0);
+  border-bottom: 1px solid var(--cf-gray-2);
+  box-shadow: var(--cf-shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--cf-z-sticky);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--cf-space-md) var(--cf-space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.demo-header h1 {
+  font-size: var(--cf-font-size-2xl);
+  font-weight: var(--cf-font-weight-bold);
+  color: var(--cf-gray-8);
+  margin: 0;
+}
+
+.header-nav {
+  display: flex;
+  gap: var(--cf-space-sm);
+}
+
+.demo-main {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--cf-space-xl) var(--cf-space-lg);
+}
+
+.demo-footer {
+  background-color: var(--cf-gray-0);
+  border-top: 1px solid var(--cf-gray-2);
+  padding: var(--cf-space-lg);
+  text-align: center;
+  color: var(--cf-gray-6);
+  font-size: var(--cf-font-size-sm);
+}
+
+/* ========================================
+   Tabs
+   ======================================== */
+
+.demo-tabs {
+  display: flex;
+  gap: var(--cf-space-sm);
+  margin-bottom: var(--cf-space-xl);
+  border-bottom: 2px solid var(--cf-gray-2);
+}
+
+.tab-button {
+  padding: var(--cf-space-md) var(--cf-space-lg);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--cf-gray-6);
+  font-size: var(--cf-font-size-base);
+  font-weight: var(--cf-font-weight-medium);
+  cursor: pointer;
+  transition: all var(--cf-transition-base);
+}
+
+.tab-button:hover {
+  color: var(--cf-gray-8);
+  background-color: var(--cf-gray-1);
+}
+
+.tab-button.active {
+  color: var(--cf-orange);
+  border-bottom-color: var(--cf-orange);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ========================================
+   Demo Layout
+   ======================================== */
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: var(--cf-space-lg);
+  margin-bottom: var(--cf-space-2xl);
+}
+
+@media (max-width: 1024px) {
+  .demo-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .config-panel {
+    order: -1;
+  }
+}
+
+.editor-section {
+  background-color: var(--cf-gray-0);
+  border: 1px solid var(--cf-gray-2);
+  border-radius: var(--cf-radius-lg);
+  box-shadow: var(--cf-shadow-sm);
+  overflow: hidden;
+}
+
+.config-panel {
+  background-color: var(--cf-gray-0);
+  border: 1px solid var(--cf-gray-2);
+  border-radius: var(--cf-radius-lg);
+  box-shadow: var(--cf-shadow-sm);
+  padding: var(--cf-space-lg);
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.config-panel h3 {
+  font-size: var(--cf-font-size-lg);
+  font-weight: var(--cf-font-weight-semibold);
+  color: var(--cf-gray-8);
+  margin-bottom: var(--cf-space-md);
+  padding-bottom: var(--cf-space-sm);
+  border-bottom: 1px solid var(--cf-gray-2);
+}
+
+/* ========================================
+   Examples Section
+   ======================================== */
+
+.examples-section {
+  margin-top: var(--cf-space-3xl);
+}
+
+.examples-section h2 {
+  font-size: var(--cf-font-size-3xl);
+  font-weight: var(--cf-font-weight-bold);
+  color: var(--cf-gray-8);
+  margin-bottom: var(--cf-space-xl);
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--cf-space-lg);
+}
+
+.example-card {
+  background-color: var(--cf-gray-0);
+  border: 1px solid var(--cf-gray-2);
+  border-radius: var(--cf-radius-lg);
+  padding: var(--cf-space-lg);
+  box-shadow: var(--cf-shadow-sm);
+  transition: all var(--cf-transition-base);
+}
+
+.example-card:hover {
+  box-shadow: var(--cf-shadow-md);
+  transform: translateY(-2px);
+}
+
+.example-card h3 {
+  font-size: var(--cf-font-size-xl);
+  font-weight: var(--cf-font-weight-semibold);
+  color: var(--cf-gray-8);
+  margin-bottom: var(--cf-space-md);
+}
+
+.example-card ul {
+  list-style: none;
+}
+
+.example-card li {
+  margin-bottom: var(--cf-space-sm);
+}
+
+.example-card a {
+  color: var(--cf-blue);
+  text-decoration: none;
+  font-size: var(--cf-font-size-sm);
+  transition: color var(--cf-transition-base);
+}
+
+.example-card a:hover {
+  color: var(--cf-blue-dark);
+  text-decoration: underline;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .demo-header h1 {
+    font-size: var(--cf-font-size-xl);
+  }
+
+  .header-nav {
+    flex-direction: column;
+    gap: var(--cf-space-xs);
+  }
+
+  .demo-main {
+    padding: var(--cf-space-lg) var(--cf-space-md);
+  }
+
+  .demo-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-button {
+    padding: var(--cf-space-sm) var(--cf-space-md);
+    font-size: var(--cf-font-size-sm);
+  }
+
+  .examples-grid {
+    grid-template-columns: 1fr;
+  }
+}

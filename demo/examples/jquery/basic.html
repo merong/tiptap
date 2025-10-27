@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery - 기본 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>jQuery - 기본 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>jQuery 플러그인 패턴</h2>
+        </div>
+        <div class="card-body">
+          <p>jQuery 플러그인 패턴을 사용한 Tiptap 에디터 구현입니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="editor"></div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>코드 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>// jQuery 플러그인으로 에디터 초기화
+$('#editor').tiptapEditor({
+  placeholder: '여기에 입력하세요...',
+  content: '&lt;p&gt;안녕하세요!&lt;/p&gt;',
+  onChange: function(editor) {
+    console.log('Content changed')
+  }
+})
+
+// 메서드 호출
+const instance = $('#editor').data('tiptapEditor')
+const html = instance.getHTML()
+instance.setContent('&lt;p&gt;New content&lt;/p&gt;')
+
+// jQuery 이벤트 리스너
+$('#editor').on('tiptap:update', function(e, editor) {
+  console.log('Updated')
+})
+
+$('#editor').on('tiptap:saved', function(e, item) {
+  console.log('Saved:', item)
+})</code></pre>
+        </div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>jQuery 메서드</h3>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="get-html">HTML 가져오기</button>
+            <button class="btn btn-secondary" id="get-text">텍스트 가져오기</button>
+            <button class="btn btn-secondary" id="set-content">콘텐츠 설정</button>
+            <button class="btn btn-secondary" id="focus">포커스</button>
+          </div>
+          <div id="output" class="mt-md" style="padding: 1rem; background: var(--cf-gray-1); border-radius: var(--cf-radius-md); font-family: var(--cf-font-family-mono); font-size: 0.875rem; min-height: 100px; white-space: pre-wrap;"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    // 간단한 jQuery 플러그인 (데모용)
+    (function($) {
+      $.fn.simpleTiptap = function(options) {
+        return this.each(function() {
+          const editor = new Editor({
+            element: this,
+            extensions: [StarterKit],
+            content: options.content || '<p></p>',
+            editorProps: {
+              attributes: {
+                class: 'tiptap-editor'
+              }
+            },
+            onUpdate: options.onChange
+          })
+
+          $(this).data('editor', editor)
+        })
+      }
+
+      // 헬퍼 메서드
+      $.fn.getEditorHTML = function() {
+        const editor = $(this).data('editor')
+        return editor ? editor.getHTML() : ''
+      }
+
+      $.fn.getEditorText = function() {
+        const editor = $(this).data('editor')
+        return editor ? editor.getText() : ''
+      }
+
+      $.fn.setEditorContent = function(content) {
+        const editor = $(this).data('editor')
+        if (editor) {
+          editor.commands.setContent(content)
+        }
+        return this
+      }
+
+      $.fn.focusEditor = function() {
+        const editor = $(this).data('editor')
+        if (editor) {
+          editor.commands.focus()
+        }
+        return this
+      }
+    })(jQuery)
+
+    // 사용
+    $(function() {
+      $('#editor').simpleTiptap({
+        content: `
+          <h2>jQuery 플러그인 패턴</h2>
+          <p>jQuery와 Tiptap을 함께 사용하는 예제입니다.</p>
+          <ul>
+            <li>jQuery 플러그인 패턴 사용</li>
+            <li>커스텀 jQuery 이벤트</li>
+            <li>메서드 체이닝 지원</li>
+          </ul>
+          <p>jQuery의 강력한 선택자와 이벤트 시스템을 활용할 수 있습니다.</p>
+        `,
+        onChange: function({ editor }) {
+          console.log('Content updated')
+        }
+      })
+
+      // 버튼 이벤트
+      $('#get-html').on('click', function() {
+        const html = $('#editor').getEditorHTML()
+        $('#output').text(html)
+      })
+
+      $('#get-text').on('click', function() {
+        const text = $('#editor').getEditorText()
+        $('#output').text(text)
+      })
+
+      $('#set-content').on('click', function() {
+        $('#editor').setEditorContent('<p>새로운 콘텐츠가 설정되었습니다!</p>')
+      })
+
+      $('#focus').on('click', function() {
+        $('#editor').focusEditor()
+      })
+    })
+  </script>
+</body>
+</html>

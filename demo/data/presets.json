@@ -1,0 +1,127 @@
+{
+  "presets": [
+    {
+      "id": "default",
+      "name": "기본 설정",
+      "description": "가장 일반적인 에디터 설정",
+      "config": {
+        "extensions": ["document", "paragraph", "text", "bold", "italic", "strike", "code", "heading", "bulletList", "orderedList"],
+        "content": "<p>여기에 텍스트를 입력하세요...</p>",
+        "editable": true,
+        "autofocus": true
+      }
+    },
+    {
+      "id": "minimal",
+      "name": "최소 설정",
+      "description": "기본 텍스트 편집만 가능",
+      "config": {
+        "extensions": ["document", "paragraph", "text"],
+        "content": "<p>최소한의 기능만 제공하는 에디터입니다.</p>",
+        "editable": true,
+        "autofocus": false
+      }
+    },
+    {
+      "id": "full",
+      "name": "전체 기능",
+      "description": "모든 확장 기능 활성화",
+      "config": {
+        "extensions": [
+          "document",
+          "paragraph",
+          "text",
+          "bold",
+          "italic",
+          "strike",
+          "code",
+          "codeBlock",
+          "heading",
+          "bulletList",
+          "orderedList",
+          "blockquote",
+          "horizontalRule",
+          "hardBreak",
+          "link",
+          "image",
+          "table",
+          "tableRow",
+          "tableCell",
+          "tableHeader",
+          "highlight",
+          "textAlign",
+          "underline"
+        ],
+        "content": "<h1>전체 기능 에디터</h1><p>모든 확장 기능이 활성화된 에디터입니다.</p>",
+        "editable": true,
+        "autofocus": true
+      }
+    },
+    {
+      "id": "readonly",
+      "name": "읽기 전용",
+      "description": "편집 불가능한 뷰어 모드",
+      "config": {
+        "extensions": ["document", "paragraph", "text", "bold", "italic", "heading"],
+        "content": "<h2>읽기 전용 모드</h2><p>이 에디터는 <strong>편집할 수 없습니다</strong>.</p>",
+        "editable": false,
+        "autofocus": false
+      }
+    },
+    {
+      "id": "markdown",
+      "name": "마크다운 스타일",
+      "description": "마크다운 입력 규칙 활성화",
+      "config": {
+        "extensions": [
+          "document",
+          "paragraph",
+          "text",
+          "bold",
+          "italic",
+          "code",
+          "codeBlock",
+          "heading",
+          "bulletList",
+          "orderedList",
+          "blockquote",
+          "horizontalRule"
+        ],
+        "content": "<p>마크다운 문법을 사용할 수 있습니다. 예: **굵게**, *기울임*, `코드`</p>",
+        "editable": true,
+        "autofocus": true,
+        "enableInputRules": true
+      }
+    }
+  ],
+  "themes": [
+    {
+      "id": "light",
+      "name": "라이트 모드",
+      "cssClass": "theme-light"
+    },
+    {
+      "id": "dark",
+      "name": "다크 모드",
+      "cssClass": "theme-dark"
+    },
+    {
+      "id": "auto",
+      "name": "시스템 설정",
+      "cssClass": "theme-auto"
+    }
+  ],
+  "shortcuts": {
+    "bold": "Mod-b",
+    "italic": "Mod-i",
+    "strike": "Mod-Shift-x",
+    "code": "Mod-e",
+    "undo": "Mod-z",
+    "redo": "Mod-Shift-z",
+    "heading1": "Mod-Alt-1",
+    "heading2": "Mod-Alt-2",
+    "heading3": "Mod-Alt-3",
+    "bulletList": "Mod-Shift-8",
+    "orderedList": "Mod-Shift-7"
+  }
+}

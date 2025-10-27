@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery - AJAX 연동 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>jQuery - AJAX 연동 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>AJAX를 통한 콘텐츠 로딩</h2>
+        </div>
+        <div class="card-body">
+          <p>jQuery AJAX를 사용하여 서버에서 콘텐츠를 불러오고 저장하는 예제입니다.</p>
+          <p class="alert alert-info mt-md">
+            이 예제는 데모 목적으로 localStorage를 사용하여 AJAX 동작을 시뮬레이션합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h3>문서 목록</h3>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <button class="btn btn-primary" id="load-list">목록 새로고침</button>
+            <button class="btn btn-secondary" id="save-current">현재 문서 저장</button>
+          </div>
+          <div id="document-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="editor"></div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>AJAX 코드 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>// 문서 목록 로드
+$.ajax({
+  url: '/api/documents',
+  method: 'GET'
+})
+.done(function(documents) {
+  documents.forEach(function(doc) {
+    // 목록 표시
+  })
+})
+
+// 문서 불러오기
+$.ajax({
+  url: '/api/documents/' + id,
+  method: 'GET'
+})
+.done(function(document) {
+  $('#editor').data('editor').commands.setContent(document.content)
+})
+
+// 문서 저장
+$.ajax({
+  url: '/api/documents',
+  method: 'POST',
+  contentType: 'application/json',
+  data: JSON.stringify({
+    title: 'Document Title',
+    content: $('#editor').data('editor').getHTML()
+  })
+})
+.done(function(response) {
+  console.log('Saved:', response)
+})</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    let editor
+
+    $(function() {
+      // 에디터 초기화
+      editor = new Editor({
+        element: document.getElementById('editor'),
+        extensions: [StarterKit],
+        content: '<p>문서를 선택하면 여기에 내용이 표시됩니다.</p>',
+        editorProps: {
+          attributes: {
+            class: 'tiptap-editor'
+          }
+        }
+      })
+
+      $('#editor').data('editor', editor)
+
+      // AJAX 시뮬레이션 함수들
+      const api = {
+        getDocuments: function() {
+          return $.Deferred(function(defer) {
+            setTimeout(function() {
+              const docs = JSON.parse(localStorage.getItem('ajax-demo-docs') || '[]')
+              defer.resolve(docs)
+            }, 300)
+          }).promise()
+        },
+
+        getDocument: function(id) {
+          return $.Deferred(function(defer) {
+            setTimeout(function() {
+              const docs = JSON.parse(localStorage.getItem('ajax-demo-docs') || '[]')
+              const doc = docs.find(d => d.id === id)
+              if (doc) {
+                defer.resolve(doc)
+              } else {
+                defer.reject({ message: 'Document not found' })
+              }
+            }, 300)
+          }).promise()
+        },
+
+        saveDocument: function(doc) {
+          return $.Deferred(function(defer) {
+            setTimeout(function() {
+              const docs = JSON.parse(localStorage.getItem('ajax-demo-docs') || '[]')
+
+              if (doc.id) {
+                // 업데이트
+                const index = docs.findIndex(d => d.id === doc.id)
+                if (index !== -1) {
+                  docs[index] = { ...docs[index], ...doc, updatedAt: Date.now() }
+                }
+              } else {
+                // 새로 생성
+                doc.id = 'doc-' + Date.now()
+                doc.createdAt = Date.now()
+                doc.updatedAt = Date.now()
+                docs.push(doc)
+              }
+
+              localStorage.setItem('ajax-demo-docs', JSON.stringify(docs))
+              defer.resolve(doc)
+            }, 500)
+          }).promise()
+        },
+
+        deleteDocument: function(id) {
+          return $.Deferred(function(defer) {
+            setTimeout(function() {
+              const docs = JSON.parse(localStorage.getItem('ajax-demo-docs') || '[]')
+              const filtered = docs.filter(d => d.id !== id)
+              localStorage.setItem('ajax-demo-docs', JSON.stringify(filtered))
+              defer.resolve({ success: true })
+            }, 300)
+          }).promise()
+        }
+      }
+
+      // 목록 로드
+      function loadDocumentList() {
+        const $list = $('#document-list')
+        $list.html('<div class="loading-spinner"></div>')
+
+        api.getDocuments()
+          .done(function(docs) {
+            if (docs.length === 0) {
+              $list.html('<p style="text-align: center; color: var(--cf-gray-5);">저장된 문서가 없습니다.</p>')
+            } else {
+              $list.empty()
+              docs.forEach(function(doc) {
+                const $item = $(`
+                  <div class="saved-item">
+                    <div class="saved-item-info">
+                      <h4>${doc.title || 'Untitled'}</h4>
+                      <div class="saved-item-meta">
+                        ${new Date(doc.updatedAt).toLocaleString('ko-KR')}
+                      </div>
+                    </div>
+                    <div class="saved-item-actions">
+                      <button class="btn btn-sm btn-primary load-doc" data-id="${doc.id}">불러오기</button>
+                      <button class="btn btn-sm btn-ghost delete-doc" data-id="${doc.id}">삭제</button>
+                    </div>
+                  </div>
+                `)
+                $list.append($item)
+              })
+            }
+          })
+          .fail(function(error) {
+            $list.html('<div class="alert alert-error">오류가 발생했습니다.</div>')
+          })
+      }
+
+      // 문서 불러오기
+      $(document).on('click', '.load-doc', function() {
+        const id = $(this).data('id')
+
+        api.getDocument(id)
+          .done(function(doc) {
+            editor.commands.setContent(doc.content)
+            $('#editor').data('current-doc-id', doc.id)
+            alert('문서를 불러왔습니다!')
+          })
+          .fail(function(error) {
+            alert('문서를 불러오는데 실패했습니다.')
+          })
+      })
+
+      // 문서 삭제
+      $(document).on('click', '.delete-doc', function() {
+        if (!confirm('정말 삭제하시겠습니까?')) return
+
+        const id = $(this).data('id')
+
+        api.deleteDocument(id)
+          .done(function() {
+            loadDocumentList()
+          })
+          .fail(function() {
+            alert('삭제하는데 실패했습니다.')
+          })
+      })
+
+      // 목록 새로고침
+      $('#load-list').on('click', function() {
+        loadDocumentList()
+      })
+
+      // 현재 문서 저장
+      $('#save-current').on('click', function() {
+        const title = prompt('문서 제목을 입력하세요:', 'New Document')
+        if (!title) return
+
+        const doc = {
+          id: $('#editor').data('current-doc-id'),
+          title: title,
+          content: editor.getHTML()
+        }
+
+        api.saveDocument(doc)
+          .done(function(savedDoc) {
+            $('#editor').data('current-doc-id', savedDoc.id)
+            alert('저장되었습니다!')
+            loadDocumentList()
+          })
+          .fail(function() {
+            alert('저장하는데 실패했습니다.')
+          })
+      })
+
+      // 초기 목록 로드
+      loadDocumentList()
+    })
+  </script>
+</body>
+</html>

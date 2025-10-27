@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vanilla JS - 플러그인 예제 | Tiptap Demo</title>
+
+  <link rel="stylesheet" href="../../assets/css/cloudflare-ui.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/demo.css">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <div class="header-content">
+        <h1>Vanilla JavaScript - 플러그인 예제</h1>
+        <nav class="header-nav">
+          <a href="../../index.html" class="nav-link">← 메인으로</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <div class="card mb-lg">
+        <div class="card-header">
+          <h2>플러그인 시스템</h2>
+        </div>
+        <div class="card-body">
+          <p>Tiptap의 확장 시스템을 활용한 플러그인 예제입니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="editor"></div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>활성화된 확장 기능</h3>
+        </div>
+        <div class="card-body">
+          <div id="extensions-list"></div>
+        </div>
+      </div>
+
+      <div class="card mt-lg">
+        <div class="card-header">
+          <h3>커스텀 Extension 예제</h3>
+        </div>
+        <div class="card-body">
+          <pre><code>import { Extension } from '@tiptap/core'
+
+const CharacterCount = Extension.create({
+  name: 'characterCount',
+
+  addStorage() {
+    return {
+      characters: 0,
+      words: 0
+    }
+  },
+
+  onUpdate() {
+    const text = this.editor.getText()
+    this.storage.characters = text.length
+    this.storage.words = text.split(/\s+/).filter(w => w).length
+  }
+})
+
+// 사용
+const editor = new Editor({
+  extensions: [StarterKit, CharacterCount],
+})
+
+console.log(editor.storage.characterCount.words)</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <footer class="demo-footer">
+      <p>&copy; 2025 Tiptap Editor Demo</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@3.7.2'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.7.2'
+
+    const editor = new Editor({
+      element: document.getElementById('editor'),
+      extensions: [StarterKit],
+      content: `
+        <h2>플러그인 시스템</h2>
+        <p>Tiptap은 강력한 확장 시스템을 제공합니다. StarterKit은 다음과 같은 확장들을 포함합니다:</p>
+        <ul>
+          <li><strong>Document</strong> - 문서의 최상위 노드</li>
+          <li><strong>Paragraph</strong> - 문단</li>
+          <li><strong>Text</strong> - 텍스트</li>
+          <li><strong>Bold, Italic, Strike</strong> - 텍스트 스타일</li>
+          <li><strong>Heading</strong> - 제목 (H1-H6)</li>
+          <li><strong>BulletList, OrderedList</strong> - 목록</li>
+          <li><strong>Code, CodeBlock</strong> - 코드</li>
+          <li><strong>Blockquote</strong> - 인용문</li>
+          <li><strong>HardBreak, HorizontalRule</strong> - 줄바꿈과 구분선</li>
+          <li><strong>History</strong> - 실행 취소/재실행</li>
+        </ul>
+        <p>각 확장은 독립적으로 활성화하거나 비활성화할 수 있습니다.</p>
+      `,
+      editorProps: {
+        attributes: {
+          class: 'tiptap-editor'
+        }
+      }
+    })
+
+    // 확장 목록 표시
+    const extensionsList = document.getElementById('extensions-list')
+    const extensions = editor.extensionManager.extensions
+
+    extensionsList.innerHTML = `
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem;">
+        ${extensions.map(ext => `
+          <div class="config-value">${ext.name}</div>
+        `).join('')}
+      </div>
+    `
+  </script>
+</body>
+</html>
